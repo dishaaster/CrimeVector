@@ -1,34 +1,62 @@
 package com.crimeapp;
+
 import java.io.*;
 import java.util.*;
 
-// Handles saving and loading data to file
 public class FileHandler {
 
-    private static final String FILE_NAME = "crime_records.dat";
+    // file where all crime records are stored
+    private static final String FILE_NAME = "crimerecords.txt";
 
-    // Save records to file
-    public static void saveRecords(List<CrimeRecord> records) {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
-            oos.writeObject(records);
-            System.out.println("✅ Records saved successfully!");
-        } catch (Exception e) {
-            System.out.println("❌ Error saving records: " + e.getMessage());
+    // 🔹 Save a single record (append mode)
+    public void saveRecord(CrimeRecord record) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME, true))) {
+            bw.write(record.toString());
+            bw.newLine();
+        } catch (IOException e) {
+            System.out.println("❌ Error saving record: " + e.getMessage());
         }
     }
 
-    // Load records from file
-    @SuppressWarnings("unchecked")
-    public static List<CrimeRecord> loadRecords() {
+    // 🔹 Load all records from file
+    public List<CrimeRecord> loadRecords() {
         List<CrimeRecord> records = new ArrayList<>();
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
-            records = (List<CrimeRecord>) ois.readObject();
-            System.out.println("✅ Records loaded successfully!");
-        } catch (FileNotFoundException e) {
-            System.out.println("No previous records found, starting fresh...");
-        } catch (Exception e) {
+
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            return records; // empty list if no file yet
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 5) {
+                    String name = parts[0];
+                    String type = parts[1];
+                    String location = parts[2];
+                    String date = parts[3];
+                    String status = parts[4];
+                    CrimeRecord record = new CrimeRecord(name, type, location, date, status);
+                    records.add(record);
+                }
+            }
+        } catch (IOException e) {
             System.out.println("❌ Error loading records: " + e.getMessage());
         }
+
         return records;
+    }
+
+    // 🔹 Save all records (overwrite file)
+    public void saveAll(List<CrimeRecord> records) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(FILE_NAME))) {
+            for (CrimeRecord r : records) {
+                bw.write(r.toString());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("❌ Error saving all records: " + e.getMessage());
+        }
     }
 }

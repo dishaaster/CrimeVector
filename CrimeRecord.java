@@ -1,37 +1,33 @@
 package com.crimeapp;
-import java.io.Serializable;
 
-// Stores details of one crime record
-public class CrimeRecord implements Serializable {
-    private String crimeID;
+public class CrimeRecord {
+    private String criminalName;
     private String crimeType;
     private String location;
     private String date;
-    private String suspect;
+    private String status;   // NEW FIELD
 
-    // Constructor
-    public CrimeRecord(String crimeID, String crimeType, String location, String date, String suspect) {
-        this.crimeID = crimeID;
+    public CrimeRecord(String criminalName, String crimeType,
+                       String location, String date, String status) {
+        this.criminalName = criminalName;
         this.crimeType = crimeType;
         this.location = location;
         this.date = date;
-        this.suspect = suspect;
+        this.status = status;
     }
 
     // Getters
-    public String getCrimeID() { return crimeID; }
-    public String getCrimeType() { return crimeType; }
-    public String getLocation() { return location; }
-    public String getDate() { return date; }
-    public String getSuspect() { return suspect; }
+    public String getCriminalName() { return criminalName; }
+    public String getCrimeType()    { return crimeType; }
+    public String getLocation()     { return location; }
+    public String getDate()         { return date; }
+    public String getStatus()       { return status; }
 
-    // Display format
+    // Setters
+    public void setStatus(String status) { this.status = status; }
+
     @Override
     public String toString() {
-        return "CrimeID: " + crimeID +
-               " | Type: " + crimeType +
-               " | Location: " + location +
-               " | Date: " + date +
-               " | Suspect: " + suspect;
+        return criminalName + "," + crimeType + "," + location + "," + date + "," + status;
     }
 }
