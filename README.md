@@ -1,3 +1,3 @@
-# CrimeVector
+# CrimeRecorManagement
 Crime Record + Predictive Policing System
-College Project - Java GUI
+ Project - Java GUI
